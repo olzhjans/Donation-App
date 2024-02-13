@@ -7,16 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-type Orphanage struct {
-	//ID           primitive.ObjectID `bson:"_id"`
-	Name         string
-	Region       string
-	Address      string
-	Description  string
-	ChildsCount  string
-	WorkingHours string
-}
-
 func getOrphanageInfo(orphanageName string) {
 	client := connectToDB()
 	defer func() {

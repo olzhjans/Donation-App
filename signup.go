@@ -8,30 +8,6 @@ import (
 	"time"
 )
 
-type Users struct {
-	Password   string
-	Email      string
-	Region     string
-	Firstname  string
-	Lastname   string
-	Phone      string
-	Donated    string
-	SignupDate string
-}
-
-type Admins struct {
-	Password    string
-	Email       string
-	Region      string
-	Firstname   string
-	Lastname    string
-	Phone       string
-	Who         string
-	Id          string
-	SignupDate  string
-	OrphanageId string
-}
-
 func signUp() {
 	client := connectToDB()
 	defer func() {
