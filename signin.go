@@ -6,17 +6,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"os"
 )
 
-func signIn() bool {
+func signIn() (string, bool) {
 	client := connectToDB()
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
 			panic(err)
 		}
 	}()
+	isAdmin := false
 
 	//SIGN IN AND PRINT DATA
 	enteredPhone, enteredPassword := getSignInData()
@@ -28,6 +30,8 @@ func signIn() bool {
 		err = adminsColl.FindOne(context.TODO(), bson.D{{"phone", enteredPhone}, {"password", enteredPassword}}).Decode(&result)
 		if err == mongo.ErrNoDocuments {
 			fmt.Println("No document was found with this telephone number and password")
+		} else {
+			isAdmin = true
 		}
 	}
 	if err != nil {
@@ -38,10 +42,10 @@ func signIn() bool {
 		panic(err)
 	}
 	fmt.Printf("%s\n", jsonData)
-	if result["who"] == "Moderator" {
-		return true
-	}
-	return false
+
+	userObjectID := result["_id"]
+	stringUserObjectID := userObjectID.(primitive.ObjectID).Hex()
+	return stringUserObjectID, isAdmin
 }
 
 func getSignInData() (string, string) {

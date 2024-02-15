@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/mail"
 	"regexp"
 )
@@ -20,4 +21,12 @@ func isValidPhoneNumber(phoneNumber string) bool {
 
 	// Проверяем соответствие
 	return re.MatchString(phoneNumber)
+}
+
+func isValidPassword(password string) bool {
+	if len(password) >= 8 {
+		return true
+	}
+	fmt.Println("Invalid password")
+	return false
 }

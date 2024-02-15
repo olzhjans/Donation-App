@@ -9,7 +9,7 @@ import (
 func main() {
 	var input string
 	for input != "0" {
-		fmt.Println("Log in - 1, sign up - 2")
+		fmt.Println("Log in - 1, sign up - 2, Show all orphanage's data - 3, API - 4")
 		fmt.Printf("Type: ")
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
@@ -17,16 +17,28 @@ func main() {
 
 		switch input {
 		case "1":
-			if isModerator := signIn(); isModerator {
-				fmt.Println("Enter orphanage name to edit its data")
-				scanner.Scan()
-				input = scanner.Text()
-				editOrphanageData(input)
+			userID, isAdmin := signIn()
+			fmt.Println("Change password - 1, Edit orphanage data - 2")
+			fmt.Printf("Type: ")
+			scanner.Scan()
+			input = scanner.Text()
+			switch input {
+			case "1":
+				editUserData(userID, isAdmin)
+			case "2":
+				if isAdmin {
+					fmt.Println("Enter orphanage name to edit its data")
+					scanner.Scan()
+					input = scanner.Text()
+					editOrphanageData(input)
+				}
 			}
 		case "2":
 			signUp()
 		case "3":
-			getOrphanageInfo("")
+			fmt.Printf("%s\n", getOrphanageInfo(""))
+		case "4":
+			apiGet(getOrphanageInfo(""))
 		default:
 			fmt.Printf("Error...")
 			return

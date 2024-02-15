@@ -1,5 +1,9 @@
 package main
 
+type Server struct {
+	Data []byte
+}
+
 type Orphanage struct {
 	//ID           primitive.ObjectID `bson:"_id"`
 	Name         string

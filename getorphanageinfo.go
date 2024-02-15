@@ -3,11 +3,10 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func getOrphanageInfo(orphanageName string) {
+func getOrphanageInfo(orphanageName string) []byte {
 	client := connectToDB()
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
@@ -34,12 +33,14 @@ func getOrphanageInfo(orphanageName string) {
 		panic(err)
 	}
 	// Prints the results of the find operation as structs
+	var outputInfo []byte
 	for _, result := range results {
 		cursor.Decode(&result)
 		output, err := json.MarshalIndent(result, "", "    ")
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("%s\n", output)
+		outputInfo = append(outputInfo, output...)
 	}
+	return outputInfo
 }

@@ -39,7 +39,7 @@ func editOrphanageData(orphanageName string) {
 	name, region, address, description, childsCount, workingHours := getOrphanageData()
 
 	filter := bson.D{{"_id", result["_id"]}}
-	fmt.Println(filter)
+	//fmt.Println(filter)
 
 	doc := Orphanage{
 		Name:         name,
