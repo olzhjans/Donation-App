@@ -14,7 +14,6 @@ func main() {
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		input = scanner.Text()
-
 		switch input {
 		case "1":
 			userID, isAdmin := signIn()
@@ -38,7 +37,7 @@ func main() {
 		case "3":
 			fmt.Printf("%s\n", getOrphanageInfo(""))
 		case "4":
-			apiGet(getOrphanageInfo(""))
+			apiLaunch(getOrphanageInfo(""))
 		default:
 			fmt.Printf("Error...")
 			return

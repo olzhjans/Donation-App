@@ -13,6 +13,7 @@ import (
 
 func editUserData(userID string, isAdmin bool) {
 	var err error
+	var password string
 
 	client := connectToDB()
 	defer func() {
@@ -43,7 +44,23 @@ func editUserData(userID string, isAdmin bool) {
 	}
 	fmt.Printf("%s\n", jsonData)
 
-	password := getUserData()
+	fmt.Println("Current password")
+	for {
+		oldPassword := getUserData()
+		if result["password"] == oldPassword {
+			break
+		}
+		fmt.Println("Invalid password")
+	}
+
+	for {
+		fmt.Println("New password")
+		password = getUserData()
+		fmt.Println("Type again")
+		if password == getUserData() {
+			break
+		}
+	}
 
 	filter := bson.D{{"_id", result["_id"]}}
 
@@ -62,9 +79,8 @@ func editUserData(userID string, isAdmin bool) {
 func getUserData() string {
 	scanner := bufio.NewScanner(os.Stdin)
 	var password string
-	fmt.Println("Type new password")
 	for {
-		fmt.Printf("New password: ")
+		fmt.Printf("Type: ")
 		scanner.Scan()
 		password = scanner.Text()
 		if isValidPassword(password) {
