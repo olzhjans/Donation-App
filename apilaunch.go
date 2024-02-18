@@ -6,18 +6,25 @@ import (
 )
 
 func apiLaunch(data []byte) {
-	s := &Server{data}
-	http.Handle("/getOrphanageData", s)
-
 	// Добавление обработчика для получения данных по ID
-	http.HandleFunc("/getOrphanageByName", apiGetByName)
+	http.HandleFunc("/getOrphanageByName", apiGetOrphanageDataByName)
 
 	// Установка обработчика POST запроса
-	http.HandleFunc("/addNewOrphanage", addNewOrphanage)
+	http.HandleFunc("/addNewOrphanage", apiAddNewOrphanage)
+
+	// Обработчик POST регистрация пользователя
+	http.HandleFunc("/userSignUp", apiUserSignUp)
+
+	// Обработчик POST регистрация пользователя
+	http.HandleFunc("/adminSignUp", apiAdminSignUp)
+
+	// Обработчик POST регистрация пользователя
+	http.HandleFunc("/login", apiUserLogin)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
+/*
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var err error
 	w.Header().Set("Content-Type", "application/json")
@@ -27,4 +34,4 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-}
+}*/

@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-func signIn() (string, bool) {
+func logIn() (string, bool) {
 	client := connectToDB()
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
@@ -21,7 +21,7 @@ func signIn() (string, bool) {
 	isAdmin := false
 
 	//SIGN IN AND PRINT DATA
-	enteredPhone, enteredPassword := getSignInData()
+	enteredPhone, enteredPassword := getLogInData()
 	userColl := client.Database("orphanage").Collection("users")
 	adminsColl := client.Database("orphanage").Collection("admins")
 	var result bson.M
@@ -48,11 +48,11 @@ func signIn() (string, bool) {
 	return stringUserObjectID, isAdmin
 }
 
-func getSignInData() (string, string) {
+func getLogInData() (string, string) {
 	scanner := bufio.NewScanner(os.Stdin)
 	phone := ""
 
-	fmt.Println("SIGN IN")
+	fmt.Println("LOG IN")
 	for {
 		fmt.Printf("Enter telephone number: ")
 		scanner.Scan()

@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func apiGetByName(w http.ResponseWriter, r *http.Request) {
+func apiGetOrphanageDataByName(w http.ResponseWriter, r *http.Request) {
 	// Проверка метода запроса
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -31,7 +31,7 @@ func apiGetByName(w http.ResponseWriter, r *http.Request) {
 
 	coll := client.Database("orphanage").Collection("orphanage")
 
-	// Поиск данных по ID
+	// Поиск данных по имени
 	var orphanage Orphanage
 	err := coll.FindOne(context.Background(), bson.M{"name": name}).Decode(&orphanage)
 	if err != nil {
@@ -41,5 +41,8 @@ func apiGetByName(w http.ResponseWriter, r *http.Request) {
 
 	// Отправка данных в формате JSON
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(orphanage)
+	err = json.NewEncoder(w).Encode(orphanage)
+	if err != nil {
+		return
+	}
 }

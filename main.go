@@ -16,7 +16,7 @@ func main() {
 		input = scanner.Text()
 		switch input {
 		case "1":
-			userID, isAdmin := signIn()
+			userID, isAdmin := logIn()
 			fmt.Println("Change password - 1, Edit orphanage data - 2")
 			fmt.Printf("Type: ")
 			scanner.Scan()

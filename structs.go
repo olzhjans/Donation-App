@@ -36,3 +36,8 @@ type Admins struct {
 	SignupDate  string `json:"signup-date"`
 	OrphanageId string `json:"orphanage-id"`
 }
+
+type LoginData struct {
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+}
