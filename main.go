@@ -1,13 +1,9 @@
 package main
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-)
-
 func main() {
-	var input string
+	apiLaunch()
+
+	/*var input string
 	for input != "0" {
 		fmt.Println("Log in - 1, sign up - 2, Show all orphanage's data - 3, API - 4")
 		fmt.Printf("Type: ")
@@ -44,4 +40,5 @@ func main() {
 		}
 	}
 	fmt.Println("Exit...")
+	*/
 }

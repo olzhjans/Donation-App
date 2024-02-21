@@ -1,25 +1,27 @@
-package main
+package auth
 
 import (
+	"awesomeProject1/dbconnect"
+	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
 	"net/http"
 )
 
-func apiUserSignUp(w http.ResponseWriter, r *http.Request) {
+func AdminSignUp(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	client := connectToDB()
+	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
 			panic(err)
 		}
 	}()
-	coll := client.Database("orphanage").Collection("users")
+	coll := client.Database("orphanage").Collection("admins")
 
 	// Парсинг данных из тела запроса
-	var user Users
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+	var admin structures.Admins
+	if err := json.NewDecoder(r.Body).Decode(&admin); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -27,14 +29,15 @@ func apiUserSignUp(w http.ResponseWriter, r *http.Request) {
 	//currentTime := time.Now()
 
 	// Вставка данных в базу данных
-	_, err = coll.InsertOne(context.Background(), user)
+	_, err = coll.InsertOne(context.Background(), admin)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	// Возвращаем успешный статус и сообщение об успешном добавлении
+	//successMessage := map[string]string{"message": "Данные успешно добавлены в базу"}
 	w.Header().Set("Content-Type", "application/json")
-	// Возвращаем успешный статус
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode("Added successfully")
 	if err != nil {

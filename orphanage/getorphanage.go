@@ -1,13 +1,15 @@
-package main
+package orphanage
 
 import (
+	"awesomeProject1/dbconnect"
+	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson"
 	"net/http"
 )
 
-func apiGetOrphanageDataByName(w http.ResponseWriter, r *http.Request) {
+func GetOrphanage(w http.ResponseWriter, r *http.Request) {
 	// Проверка метода запроса
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -22,7 +24,7 @@ func apiGetOrphanageDataByName(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Подключение к базе данных
-	client := connectToDB()
+	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
 			panic(err)
@@ -32,7 +34,7 @@ func apiGetOrphanageDataByName(w http.ResponseWriter, r *http.Request) {
 	coll := client.Database("orphanage").Collection("orphanage")
 
 	// Поиск данных по имени
-	var orphanage Orphanage
+	var orphanage structures.Orphanage
 	err := coll.FindOne(context.Background(), bson.M{"name": name}).Decode(&orphanage)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

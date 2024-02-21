@@ -1,4 +1,4 @@
-package main
+package dbconnect
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func connectToDB() *mongo.Client {
+func ConnectToDB() *mongo.Client {
 	if err := godotenv.Load("mongodb.env"); err != nil {
 		log.Println("No .env file found")
 	}

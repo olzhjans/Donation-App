@@ -1,37 +1,29 @@
 package main
 
 import (
+	"awesomeProject1/auth"
+	"awesomeProject1/edituser"
+	"awesomeProject1/orphanage"
+	"fmt"
 	"log"
 	"net/http"
 )
 
-func apiLaunch(data []byte) {
-	// Добавление обработчика для получения данных по ID
-	http.HandleFunc("/getOrphanageByName", apiGetOrphanageDataByName)
+func apiLaunch() {
+	http.HandleFunc("/login", auth.UserLogin)
 
-	// Установка обработчика POST запроса
-	http.HandleFunc("/addNewOrphanage", apiAddNewOrphanage)
+	http.HandleFunc("/userSignUp", auth.UserSignUp)
+	http.HandleFunc("/adminSignUp", auth.AdminSignUp)
 
-	// Обработчик POST регистрация пользователя
-	http.HandleFunc("/userSignUp", apiUserSignUp)
+	http.HandleFunc("/editAdmin", edituser.EditAdmin)
+	http.HandleFunc("/editUser", edituser.EditUser)
 
-	// Обработчик POST регистрация пользователя
-	http.HandleFunc("/adminSignUp", apiAdminSignUp)
+	http.HandleFunc("/addOrphanage", orphanage.AddOrphanage)
+	http.HandleFunc("/editOrphanage", orphanage.EditOrphanage)
 
-	// Обработчик POST регистрация пользователя
-	http.HandleFunc("/login", apiUserLogin)
+	//Обработчик GET запроса
+	http.HandleFunc("/getOrphanage", orphanage.GetOrphanage) //localhost:8080/getOrphanage?name=ENTER_NAME
 
+	fmt.Println("Running...")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
-
-/*
-func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	var err error
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	_, err = w.Write(s.Data)
-	if err != nil {
-		return
-	}
-}*/

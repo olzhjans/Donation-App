@@ -1,6 +1,8 @@
-package main
+package auth
 
 import (
+	"awesomeProject1/dbconnect"
+	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson"
@@ -8,9 +10,9 @@ import (
 	"net/http"
 )
 
-func apiUserLogin(w http.ResponseWriter, r *http.Request) {
+func UserLogin(w http.ResponseWriter, r *http.Request) {
 	var err error
-	client := connectToDB()
+	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
 			panic(err)
@@ -18,7 +20,7 @@ func apiUserLogin(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	// Парсинг данных из тела запроса
-	var loginData LoginData
+	var loginData structures.LoginData
 	if err := json.NewDecoder(r.Body).Decode(&loginData); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -34,9 +36,6 @@ func apiUserLogin(w http.ResponseWriter, r *http.Request) {
 			result = bson.M{"result": "No documents"}
 		}
 	}
-	/*if err != nil {
-		panic(err)
-	}*/
 
 	// Возвращаем успешный статус
 	w.Header().Set("Content-Type", "application/json")
