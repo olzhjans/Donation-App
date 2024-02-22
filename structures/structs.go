@@ -42,3 +42,8 @@ type LoginData struct {
 	Phone    string `json:"phone"`
 	Password string `json:"password"`
 }
+
+type OrphanageFilter struct {
+	Region           string `json:"region,omitempty"`
+	CategoryOfDonate string `json:"category-of-donate,omitempty"`
+}

@@ -21,8 +21,9 @@ func apiLaunch() {
 	http.HandleFunc("/addOrphanage", orphanage.AddOrphanage)
 	http.HandleFunc("/editOrphanage", orphanage.EditOrphanage)
 
+	http.HandleFunc("/getOrphanagesByRegionAndNeeds", orphanage.GetOrphanagesByRegionAndNeeds)
 	//Обработчик GET запроса
-	http.HandleFunc("/getOrphanage", orphanage.GetOrphanage) //localhost:8080/getOrphanage?name=ENTER_NAME
+	http.HandleFunc("/getOrphanage", orphanage.GetOrphanageByName) //localhost:8080/getOrphanage?name=ENTER_NAME
 
 	fmt.Println("Running...")
 	log.Fatal(http.ListenAndServe(":8080", nil))
