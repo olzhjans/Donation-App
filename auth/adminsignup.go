@@ -17,7 +17,7 @@ func AdminSignUp(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 	}()
-	coll := client.Database("orphanage").Collection("admins")
+	coll := client.Database("orphanage").Collection("waitinglist")
 
 	// Парсинг данных из тела запроса
 	var admin structures.Admins

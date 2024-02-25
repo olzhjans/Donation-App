@@ -4,12 +4,20 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type Orphanage struct {
 	ID           primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	Name         string             `json:"name"`
-	Region       string             `json:"region"`
-	Address      string             `json:"address"`
-	Description  string             `json:"description"`
-	ChildsCount  string             `json:"childs-count"`
-	WorkingHours string             `json:"working-hours"`
+	Name         string             `bson:"name" json:"name"`
+	Region       string             `bson:"region" json:"region"`
+	Address      string             `bson:"address" json:"address"`
+	Description  string             `bson:"description" json:"description"`
+	ChildsCount  string             `bson:"childscount" json:"childs-count"`
+	WorkingHours string             `bson:"workinghours" json:"working-hours"`
+	Photos       []string           `bson:"photos" json:"photos"`
+}
+
+type WhereSpent struct {
+	ID          primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Date        string             `bson:"date,omitempty" json:"date,omitempty"`
+	SpentTo     string             `bson:"spent-to,omitempty" json:"spent-to,omitempty"`
+	OrphanageId string             `bson:"orphanage-id,omitempty" json:"orphanage-id,omitempty"`
 }
 
 type Users struct {

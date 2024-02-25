@@ -5,7 +5,9 @@ import (
 	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )
 
@@ -29,6 +31,14 @@ func GetOrphanagesByRegionAndNeeds(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	//IF FOUND NOTHING THEN FIND ALL REGIONS
+	if orphanageCursor.RemainingBatchLength() == 0 {
+		orphanageCursor, err = orphanageColl.Find(context.Background(), bson.D{})
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}
 	defer func() {
 		if err := orphanageCursor.Close(context.Background()); err != nil {
 			panic(err)
@@ -37,13 +47,16 @@ func GetOrphanagesByRegionAndNeeds(w http.ResponseWriter, r *http.Request) {
 	// Проход по результатам и фильтрация по типу необходимости
 	var result []interface{}
 	for orphanageCursor.Next(context.Background()) {
-		var orphanage map[string]string
+		var orphanage map[string]interface{}
 		if err := orphanageCursor.Decode(&orphanage); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		//в переменную преобразуем тип интерфейс в примитив.обжектАйди
+		str := orphanage["_id"].(primitive.ObjectID)
+
 		// Фильтрация по типу необходимости
-		needCursor, err := needsColl.Find(context.Background(), bson.M{"orphanageid": orphanage["_id"], "categoryofdonate": orphanageFilter.CategoryOfDonate})
+		needCursor, err := needsColl.Find(context.Background(), bson.M{"orphanageid": str.Hex(), "categoryofdonate": orphanageFilter.CategoryOfDonate})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -51,7 +64,7 @@ func GetOrphanagesByRegionAndNeeds(w http.ResponseWriter, r *http.Request) {
 		// Проходится по необходимостям если они есть и выводит
 		for needCursor.Next(context.Background()) {
 			result = append(result, orphanage["name"])
-			var need map[string]string
+			var need map[string]interface{}
 			if err := needCursor.Decode(&need); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
