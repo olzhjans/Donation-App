@@ -5,7 +5,6 @@ import (
 	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
-	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
@@ -26,46 +25,48 @@ func GetOrphanagesByRegionAndNeeds(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	orphanageCursor, err := orphanageColl.Find(context.Background(), bson.M{"region": orphanageFilter.Region})
+	needCursor, err := needsColl.Find(context.Background(), bson.M{"categoryofdonate": orphanageFilter.CategoryOfDonate})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	//IF FOUND NOTHING THEN FIND ALL REGIONS
-	if orphanageCursor.RemainingBatchLength() == 0 {
-		orphanageCursor, err = orphanageColl.Find(context.Background(), bson.D{})
-		if err != nil {
-			fmt.Println(err)
+	var result []interface{}
+	for needCursor.Next(context.Background()) {
+		var need map[string]interface{}
+		if err = needCursor.Decode(&need); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
+		}
+		objId, err := primitive.ObjectIDFromHex(need["orphanageid"].(string))
+		if err != nil {
+			// Обработка ошибки при парсинге строки в ObjectID
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		//
+		var orphanage map[string]interface{}
+		err = orphanageColl.FindOne(context.Background(), bson.M{"_id": objId}).Decode(&orphanage)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if orphanage["region"] == orphanageFilter.Region {
+			result = append(result, need)
 		}
 	}
-	defer func() {
-		if err := orphanageCursor.Close(context.Background()); err != nil {
-			panic(err)
-		}
-	}()
-	// Проход по результатам и фильтрация по типу необходимости
-	var result []interface{}
-	for orphanageCursor.Next(context.Background()) {
-		var orphanage map[string]interface{}
-		if err := orphanageCursor.Decode(&orphanage); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		//в переменную преобразуем тип интерфейс в примитив.обжектАйди
-		str := orphanage["_id"].(primitive.ObjectID)
-
-		// Фильтрация по типу необходимости
-		needCursor, err := needsColl.Find(context.Background(), bson.M{"orphanageid": str.Hex(), "categoryofdonate": orphanageFilter.CategoryOfDonate})
+	err = needCursor.Close(context.Background())
+	if err != nil {
+		return
+	}
+	if result == nil {
+		needCursor, err = needsColl.Find(context.Background(), bson.M{"categoryofdonate": orphanageFilter.CategoryOfDonate})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		// Проходится по необходимостям если они есть и выводит
 		for needCursor.Next(context.Background()) {
-			result = append(result, orphanage["name"])
 			var need map[string]interface{}
-			if err := needCursor.Decode(&need); err != nil {
+			if err = needCursor.Decode(&need); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}

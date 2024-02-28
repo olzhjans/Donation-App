@@ -39,7 +39,7 @@ func GetOrphanageByName(w http.ResponseWriter, r *http.Request) {
 		}
 		var result []interface{}
 		for cursor.Next(context.Background()) {
-			var cur map[string]string
+			var cur map[string]interface{}
 			if err := cursor.Decode(&cur); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return

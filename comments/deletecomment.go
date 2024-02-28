@@ -1,8 +1,7 @@
-package auth
+package comments
 
 import (
 	"awesomeProject1/dbconnect"
-	"awesomeProject1/mail"
 	"context"
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson"
@@ -10,7 +9,7 @@ import (
 	"net/http"
 )
 
-func DeleteWaitingListById(w http.ResponseWriter, r *http.Request) {
+func DeleteComment(w http.ResponseWriter, r *http.Request) {
 	// Проверка метода запроса
 	if r.Method != http.MethodDelete {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -23,10 +22,10 @@ func DeleteWaitingListById(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 	}()
-	coll := client.Database("orphanage").Collection("waitinglist")
+	CommentsColl := client.Database("orphanage").Collection("comments")
 	// Получение ID записи из запроса
 	params := r.URL.Query()
-	id := params.Get("id")
+	id := params.Get("_id")
 	if id == "" {
 		http.Error(w, "ID parameter is required", http.StatusBadRequest)
 		return
@@ -38,7 +37,7 @@ func DeleteWaitingListById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	filter := bson.M{"_id": objID}
-	_, err = coll.DeleteOne(context.Background(), filter)
+	_, err = CommentsColl.DeleteOne(context.Background(), filter)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -49,6 +48,4 @@ func DeleteWaitingListById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	//SEND MAIL
-	mail.SendMail("olzhjans@gmail.com", "Donation-App", "Unfortunately, your request has been rejected")
 }

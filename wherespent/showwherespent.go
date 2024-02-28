@@ -2,6 +2,7 @@ package wherespent
 
 import (
 	"awesomeProject1/dbconnect"
+	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,11 +10,6 @@ import (
 )
 
 func ShowWhereSpent(w http.ResponseWriter, r *http.Request) {
-	// Проверка метода запроса
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
 	// Подключение к базе данных
 	client := dbconnect.ConnectToDB()
 	defer func() {
@@ -22,21 +18,26 @@ func ShowWhereSpent(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 	coll := client.Database("orphanage").Collection("wherespent")
-	// Получение ID коллекции из URL
-	orphanageid := r.URL.Query().Get("orphanageid")
-	cursor, err := coll.Find(context.Background(), bson.M{"orphanageid": orphanageid})
+	var whereSpentFilter structures.WhereSpentFilter
+	if err := json.NewDecoder(r.Body).Decode(&whereSpentFilter); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	cursor, err := coll.Find(context.Background(), bson.M{"orphanageid": whereSpentFilter.OrphanageId, "date": bson.M{"$gte": whereSpentFilter.From, "$lte": whereSpentFilter.To}})
 	if err != nil {
 		panic(err)
 	}
-	if orphanageid == "" {
-		cursor, err = coll.Find(context.Background(), bson.D{})
-		if err != nil {
-			panic(err)
+	/*
+		if orphanageid == "" {
+			cursor, err = coll.Find(context.Background(), bson.D{})
+			if err != nil {
+				panic(err)
+			}
 		}
-	}
+	*/
 	var result []interface{}
 	for cursor.Next(context.Background()) {
-		var cur map[string]string
+		var cur map[string]interface{}
 		if err := cursor.Decode(&cur); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

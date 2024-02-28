@@ -2,6 +2,7 @@ package auth
 
 import (
 	"awesomeProject1/dbconnect"
+	"awesomeProject1/mail"
 	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
@@ -24,7 +25,7 @@ func ConfirmRegistrationById(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 	}()
-	coll := client.Database("orphanage").Collection("waitinglist")
+	waitingColl := client.Database("orphanage").Collection("waitinglist")
 
 	// Получение ID коллекции из URL
 	id := r.URL.Query().Get("_id")
@@ -35,7 +36,7 @@ func ConfirmRegistrationById(w http.ResponseWriter, r *http.Request) {
 	}
 	// Поиск данных по имени
 	var admin structures.Admins
-	err = coll.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&admin)
+	err = waitingColl.FindOne(context.Background(), bson.M{"_id": objID}).Decode(&admin)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -46,10 +47,18 @@ func ConfirmRegistrationById(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	//DELETE FROM WAITING LIST
+	_, err = waitingColl.DeleteOne(context.Background(), bson.M{"_id": objID})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	//успешно
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode("Confirmed successfully")
 	if err != nil {
 		return
 	}
+	//SEND MAIL
+	mail.SendMail("olzhjans@gmail.com", "Donation-App", "Congratulations, your request has been confirmed")
 }
