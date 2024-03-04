@@ -1,4 +1,4 @@
-package edituser
+package donation
 
 import (
 	"awesomeProject1/dbconnect"
@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func EditAdmin(w http.ResponseWriter, r *http.Request) {
+func GetTotalDonatedByOrphanageIdAndPeriod(w http.ResponseWriter, r *http.Request) {
 	var err error
 	err = flag.Set("logtostderr", "false") // Логировать в stderr (консоль) (false для записи в файл)
 	if err != nil {
@@ -35,27 +35,36 @@ func EditAdmin(w http.ResponseWriter, r *http.Request) {
 			glog.Fatal(err)
 		}
 	}()
-
-	var adminData structures.Admins
-	if err := json.NewDecoder(r.Body).Decode(&adminData); err != nil {
+	donationHistoryColl := client.Database("orphanage").Collection("donationhistory")
+	var donation structures.DonationFilter
+	if err = json.NewDecoder(r.Body).Decode(&donation); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
-
-	coll := client.Database("orphanage").Collection("admins")
-
-	filter := bson.D{{"_id", adminData.ID}}
-	update := bson.D{{"$set", adminData}}
-
-	_, err = coll.UpdateOne(context.Background(), filter, update)
+	donationCursor, err := donationHistoryColl.Find(context.Background(), bson.M{"orphanage-id": donation.Id, "date": bson.M{"$gte": donation.From, "$lte": donation.To}})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		glog.Fatal(err)
+	}
+	sum := 0
+	for donationCursor.Next(context.Background()) {
+		var donate structures.DonationHistory
+		err = donationCursor.Decode(&donate)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			glog.Fatal(err)
+		}
+		sum += donate.Sum / len(donate.OrphanageId)
+	}
+	err = donationCursor.Close(context.Background())
 	if err != nil {
 		glog.Fatal(err)
 	}
-	glog.Info(adminData.ID, " edited successfully")
-
+	glog.Info("Success")
+	// Возвращаем успешный статус
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode("Successfully edited")
+	err = json.NewEncoder(w).Encode(sum)
 	if err != nil {
 		glog.Fatal(err)
 	}

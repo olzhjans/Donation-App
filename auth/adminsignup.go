@@ -5,16 +5,33 @@ import (
 	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
+	"flag"
+	"github.com/golang/glog"
+	"log"
 	"net/http"
 )
 
 func AdminSignUp(w http.ResponseWriter, r *http.Request) {
 	var err error
+	err = flag.Set("logtostderr", "false") // Логировать в stderr (консоль) (false для записи в файл)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = flag.Set("stderrthreshold", "FATAL") // Устанавливаем порог для вывода ошибок в stderr
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = flag.Set("log_dir", "C:/golang/logs/") // Указываем директорию для сохранения логов
+	if err != nil {
+		log.Fatal(err)
+	}
+	flag.Parse()
+	defer glog.Flush()
 
 	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
+			glog.Fatal(err)
 		}
 	}()
 	coll := client.Database("orphanage").Collection("waitinglist")
@@ -23,24 +40,21 @@ func AdminSignUp(w http.ResponseWriter, r *http.Request) {
 	var admin structures.Admins
 	if err := json.NewDecoder(r.Body).Decode(&admin); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		glog.Fatal(err)
 	}
-
-	//currentTime := time.Now()
 
 	// Вставка данных в базу данных
-	_, err = coll.InsertOne(context.Background(), admin)
+	insertedAdmin, err := coll.InsertOne(context.Background(), admin)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		glog.Fatal(err)
 	}
+	glog.Info(insertedAdmin.InsertedID, "successfully signed up")
 
-	// Возвращаем успешный статус и сообщение об успешном добавлении
-	//successMessage := map[string]string{"message": "Данные успешно добавлены в базу"}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode("Added successfully")
 	if err != nil {
-		return
+		glog.Fatal(err)
 	}
 }

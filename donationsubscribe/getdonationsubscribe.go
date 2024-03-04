@@ -1,4 +1,4 @@
-package comments
+package donationsubscribe
 
 import (
 	"awesomeProject1/dbconnect"
@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func GetComments(w http.ResponseWriter, r *http.Request) {
+func GetDonationSubscribeByUserId(w http.ResponseWriter, r *http.Request) {
 	var err error
 	err = flag.Set("logtostderr", "false") // Логировать в stderr (консоль) (false для записи в файл)
 	if err != nil {
@@ -31,32 +31,40 @@ func GetComments(w http.ResponseWriter, r *http.Request) {
 
 	client := dbconnect.ConnectToDB()
 	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
+		if err = client.Disconnect(context.TODO()); err != nil {
 			glog.Fatal(err)
 		}
 	}()
-
-	commentaryColl := client.Database("orphanage").Collection("comments")
-	var commentsFilter structures.CommentaryFilter
-	if err = json.NewDecoder(r.Body).Decode(&commentsFilter); err != nil {
+	bankDetailsColl := client.Database("orphanage").Collection("bankdetails")
+	donateSubscribeColl := client.Database("orphanage").Collection("donatesubscribe")
+	userid := r.URL.Query().Get("userid")
+	bankDetailsCursor, err := bankDetailsColl.Find(context.Background(), bson.D{{"userid", userid}})
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
-	commentaryCursor, err := commentaryColl.Find(context.Background(), bson.M{"need-id": commentsFilter.NeedId, "date": bson.M{"$gte": commentsFilter.From, "$lte": commentsFilter.To}})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		glog.Fatal(err)
-	}
 	var result []interface{}
-	for commentaryCursor.Next(context.Background()) {
-		var commentary map[string]interface{}
-		if err = commentaryCursor.Decode(&commentary); err != nil {
+	for bankDetailsCursor.Next(context.Background()) {
+		var detail structures.BankDetails
+		if err = bankDetailsCursor.Decode(&detail); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			glog.Fatal(err)
 		}
-		result = append(result, commentary)
+		donateSubscriptionCursor, err := donateSubscribeColl.Find(context.Background(), bson.D{{"bankdetailsid", detail.ID.Hex()}})
+		for donateSubscriptionCursor.Next(context.Background()) {
+			var subscription map[string]interface{}
+			if err = donateSubscriptionCursor.Decode(&subscription); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				glog.Fatal(err)
+			}
+			result = append(result, subscription)
+		}
+		err = donateSubscriptionCursor.Close(context.Background())
+		if err != nil {
+			glog.Fatal(err)
+		}
 	}
-	err = commentaryCursor.Close(context.Background())
+	err = bankDetailsCursor.Close(context.Background())
 	if err != nil {
 		glog.Fatal(err)
 	}

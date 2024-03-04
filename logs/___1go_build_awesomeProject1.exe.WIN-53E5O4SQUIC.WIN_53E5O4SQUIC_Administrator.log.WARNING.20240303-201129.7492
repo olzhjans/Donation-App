@@ -1,0 +1,24 @@
+Log file created at: 2024/03/03 20:11:29
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+F0303 20:11:29.503348    7492 donate.go:41] mongo: no documents in result
+
+goroutine 18 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/donation.AddDonate({0x653930, 0xc0001c2000}, 0xc000192100)
+	C:/golang/donation/donate.go:41 +0x4ce
+net/http.HandlerFunc.ServeHTTP(0x10?, {0x653930?, 0xc0001c2000?}, 0xc00019012c?)
+	C:/Program Files/Go/src/net/http/server.go:2136 +0x29
+net/http.(*ServeMux).ServeHTTP(0x5d925?, {0x653930, 0xc0001c2000}, 0xc000192100)
+	C:/Program Files/Go/src/net/http/server.go:2514 +0x142
+net/http.serverHandler.ServeHTTP({0x652178?}, {0x653930?, 0xc0001c2000?}, 0x6?)
+	C:/Program Files/Go/src/net/http/server.go:2938 +0x8e
+net/http.(*conn).serve(0xc0001a2000, {0x654270, 0xc00002d3b0})
+	C:/Program Files/Go/src/net/http/server.go:2009 +0x5f4
+created by net/http.(*Server).Serve in goroutine 1
+	C:/Program Files/Go/src/net/http/server.go:3086 +0x5cb
+
+E0303 20:11:29.551373    7492 glog.go:650] abortProcess returned unexpectedly: not supported by windows

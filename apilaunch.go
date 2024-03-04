@@ -3,6 +3,8 @@ package main
 import (
 	"awesomeProject1/auth"
 	"awesomeProject1/comments"
+	"awesomeProject1/donation"
+	"awesomeProject1/donationsubscribe"
 	"awesomeProject1/edituser"
 	"awesomeProject1/needs"
 	"awesomeProject1/orphanage"
@@ -27,16 +29,26 @@ func apiLaunch() {
 	http.HandleFunc("/editOrphanage", orphanage.EditOrphanage)
 
 	http.HandleFunc("/getOrphanagesByRegionAndNeeds", orphanage.GetOrphanagesByRegionAndNeeds)
-	//Обработчик GET запроса
 	http.HandleFunc("/getOrphanage", orphanage.GetOrphanageByName) //localhost:8080/getOrphanage?name=ENTER_NAME
 
 	http.HandleFunc("/showWhereSpent", wherespent.ShowWhereSpent)
-	http.HandleFunc("/showNeeds", needs.ShowNeeds) //localhost:8080/showNeeds?orphanageid=ENTER_ID
-	http.HandleFunc("/addNeeds", needs.AddNeeds)   //localhost:8080/showNeeds?orphanageid=ENTER_ID
+	http.HandleFunc("/showNeeds", needs.ShowNeeds)                   //localhost:8080/showNeeds?orphanageid=ENTER_ID
+	http.HandleFunc("/addNeeds", needs.AddNeeds)                     //localhost:8080/showNeeds?orphanageid=ENTER_ID
+	http.HandleFunc("/activateNeed", needs.ActivateNeedByNeedId)     //localhost:8080/activateNeed?needid=ENTER_ID
+	http.HandleFunc("/deactivateNeed", needs.DeactivateNeedByNeedId) //localhost:8080/activateNeed?needid=ENTER_ID
 
 	http.HandleFunc("/getComments", comments.GetComments)
 	http.HandleFunc("/addComment", comments.AddComment)
 	http.HandleFunc("/deleteComment", comments.DeleteComment) //DELETE ЗАПРОС localhost:8080/deleteComment?_id=ENTER_ID
+
+	http.HandleFunc("/addDonate", donation.AddDonate)
+	http.HandleFunc("/getTotalDonatedByOrphanageIdAndPeriod", donation.GetTotalDonatedByOrphanageIdAndPeriod)
+	http.HandleFunc("/getTotalDonatedByUserIdAndPeriod", donation.GetTotalDonatedByUserIdAndPeriod)
+
+	http.HandleFunc("/addDonationSubscribe", donationsubscribe.SubscribeToDonation)
+	http.HandleFunc("/deactivateDonateSubscription", donationsubscribe.DeactivateDonateSubscription) //GET localhost:8080/deactivateDonateSubscription?_id=ENTER_ID
+	http.HandleFunc("/getDonationSubscribeByUserId", donationsubscribe.GetDonationSubscribeByUserId) //GET localhost:8080/getDonationSubscribeByUserId?userid=ENTER_ID
+	http.HandleFunc("/getDonationHistoryByUserId", donation.GetDonationHistoryByUserId)              //GET localhost:8080/getDonationHistoryByUserId?userid=ENTER_ID
 
 	fmt.Println("Running...")
 	log.Fatal(http.ListenAndServe(":8080", nil))

@@ -1,18 +1,18 @@
-package edituser
+package donationsubscribe
 
 import (
 	"awesomeProject1/dbconnect"
-	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
 	"flag"
 	"github.com/golang/glog"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
 )
 
-func EditAdmin(w http.ResponseWriter, r *http.Request) {
+func DeactivateDonateSubscription(w http.ResponseWriter, r *http.Request) {
 	var err error
 	err = flag.Set("logtostderr", "false") // Логировать в stderr (консоль) (false для записи в файл)
 	if err != nil {
@@ -35,27 +35,23 @@ func EditAdmin(w http.ResponseWriter, r *http.Request) {
 			glog.Fatal(err)
 		}
 	}()
-
-	var adminData structures.Admins
-	if err := json.NewDecoder(r.Body).Decode(&adminData); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		glog.Fatal(err)
-	}
-
-	coll := client.Database("orphanage").Collection("admins")
-
-	filter := bson.D{{"_id", adminData.ID}}
-	update := bson.D{{"$set", adminData}}
-
-	_, err = coll.UpdateOne(context.Background(), filter, update)
+	donateSubscribeColl := client.Database("orphanage").Collection("donatesubscribe")
+	id := r.URL.Query().Get("_id")
+	objId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		glog.Fatal(err)
 	}
-	glog.Info(adminData.ID, " edited successfully")
-
+	_, err = donateSubscribeColl.UpdateOne(context.Background(), bson.D{{"_id", objId}}, bson.D{{"$set", bson.D{{"isactive", false}}}})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		glog.Fatal(err)
+	}
+	glog.Info(id, "deactivated successfully")
+	// Возвращаем успешный статус
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode("Successfully edited")
+	err = json.NewEncoder(w).Encode("Successfully deactivated")
 	if err != nil {
 		glog.Fatal(err)
 	}
