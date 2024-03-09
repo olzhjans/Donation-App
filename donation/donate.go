@@ -40,19 +40,34 @@ func AddDonate(w http.ResponseWriter, r *http.Request) {
 	bankDetailsColl := client.Database("orphanage").Collection("bankdetails")
 	orphanageColl := client.Database("orphanage").Collection("orphanage")
 	donationHistoryColl := client.Database("orphanage").Collection("donationhistory")
+	userColl := client.Database("orphanage").Collection("users")
 	var donate structures.Donate
-	if err := json.NewDecoder(r.Body).Decode(&donate); err != nil {
+	if err = json.NewDecoder(r.Body).Decode(&donate); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	objId, err := primitive.ObjectIDFromHex(donate.BankDetailsId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		glog.Fatal(err)
+	}
 	var userDetails map[string]interface{}
-	err = bankDetailsColl.FindOne(context.Background(), bson.D{{"userid", donate.UserId}}).Decode(&userDetails)
+	err = bankDetailsColl.FindOne(context.Background(), bson.D{{"_id", objId}}).Decode(&userDetails)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		glog.Fatal(err)
 	}
 	if userDetails["bill"].(int64) >= int64(donate.Sum) {
-		_, err = bankDetailsColl.UpdateOne(context.Background(), bson.D{{"userid", donate.UserId}}, bson.D{{"$inc", bson.D{{"bill", -donate.Sum}}}})
+		_, err = bankDetailsColl.UpdateOne(context.Background(), bson.D{{"_id", objId}}, bson.D{{"$inc", bson.D{{"bill", -donate.Sum}}}})
+		if err != nil {
+			glog.Fatal(err)
+		}
+		objId, err = primitive.ObjectIDFromHex(userDetails["userid"].(string))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			glog.Fatal(err)
+		}
+		_, err = userColl.UpdateOne(context.Background(), bson.D{{"_id", objId}}, bson.D{{"$inc", bson.D{{"donated", donate.Sum}}}})
 		if err != nil {
 			glog.Fatal(err)
 		}
@@ -69,10 +84,10 @@ func AddDonate(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		doc := structures.DonationHistory{
-			UserId:      donate.UserId,
+			UserId:      userDetails["userid"].(string),
 			OrphanageId: donate.OrphanageId,
 			Sum:         donate.Sum,
-			Date:        primitive.NewDateTimeFromTime(time.Now()),
+			Date:        primitive.NewDateTimeFromTime(time.Now().Add(5 * time.Hour)),
 		}
 		_, err = donationHistoryColl.InsertOne(context.Background(), doc)
 		if err != nil {

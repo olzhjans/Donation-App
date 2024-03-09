@@ -1,0 +1,7 @@
+Log file created at: 2024/03/07 10:22:41
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0307 10:22:41.534961   10760 edituser.go:59] ObjectID("65e71c90cbb401656adb55a6") not found
+I0307 10:23:31.325308   10760 edituser.go:69] ObjectID("65e719fd9c39339929ae5b5d") edited successfully

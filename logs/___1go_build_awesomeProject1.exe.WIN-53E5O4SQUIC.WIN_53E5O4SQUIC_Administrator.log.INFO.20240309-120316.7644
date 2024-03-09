@@ -1,0 +1,8 @@
+Log file created at: 2024/03/09 12:03:16
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0309 12:03:16.778832    7644 addneeds.go:54] ObjectID("65ec09b412565b2aa1cd8d95") added successfully
+I0309 12:05:45.730940    7644 activateneed.go:58] 65ba75f0ab0265f4fa9d4b5fsuccessfully activated
+I0309 12:06:20.389731    7644 deactivateneed.go:56] ObjectID("65ba75f0ab0265f4fa9d4b5f") deactivated successfully

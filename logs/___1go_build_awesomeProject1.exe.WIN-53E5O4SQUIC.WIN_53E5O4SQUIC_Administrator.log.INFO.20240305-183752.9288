@@ -1,0 +1,7 @@
+Log file created at: 2024/03/05 18:37:52
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0305 18:37:52.671711    9288 showwaitinglist.go:62] Showed successfully
+I0305 18:40:23.313791    9288 confirmregistrationbyid.go:81] ObjectID("65e71c90cbb401656adb55a6")confirmed successfully

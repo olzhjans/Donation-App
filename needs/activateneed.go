@@ -50,7 +50,7 @@ func ActivateNeedByNeedId(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
-	needExpiring := primitive.NewDateTimeFromTime(time.Now().UTC().AddDate(0, 1, 0))
+	needExpiring := primitive.NewDateTimeFromTime(time.Now().UTC().Add(5*time.Hour).AddDate(0, 1, 0))
 	_, err = coll.UpdateOne(context.Background(), bson.D{{"_id", objId}}, bson.D{{"$set", bson.D{{"isactive", true}, {"expiring", needExpiring}}}})
 	if err != nil {
 		glog.Fatal(err)

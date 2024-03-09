@@ -1,4 +1,4 @@
-package orphanage
+package needs
 
 import (
 	"awesomeProject1/dbconnect"
@@ -13,7 +13,7 @@ import (
 	"net/http"
 )
 
-func GetOrphanagesByRegionAndNeeds(w http.ResponseWriter, r *http.Request) {
+func GetNeedsByRegionAndType(w http.ResponseWriter, r *http.Request) {
 	var err error
 	err = flag.Set("logtostderr", "false") // Логировать в stderr (консоль) (false для записи в файл)
 	if err != nil {
@@ -39,12 +39,12 @@ func GetOrphanagesByRegionAndNeeds(w http.ResponseWriter, r *http.Request) {
 	orphanageColl := client.Database("orphanage").Collection("orphanage")
 	needsColl := client.Database("orphanage").Collection("need")
 	// Парсинг данных из тела запроса
-	var orphanageFilter structures.OrphanageFilter
-	if err = json.NewDecoder(r.Body).Decode(&orphanageFilter); err != nil {
+	var needFilter structures.NeedFilter
+	if err = json.NewDecoder(r.Body).Decode(&needFilter); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
-	needCursor, err := needsColl.Find(context.Background(), bson.M{"categoryofdonate": orphanageFilter.CategoryOfDonate})
+	needCursor, err := needsColl.Find(context.Background(), bson.M{"categoryofdonate": needFilter.CategoryOfDonate})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		glog.Fatal(err)
@@ -69,7 +69,7 @@ func GetOrphanagesByRegionAndNeeds(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			glog.Fatal(err)
 		}
-		if orphanage["region"] == orphanageFilter.Region {
+		if orphanage["region"] == needFilter.Region {
 			result = append(result, need)
 		}
 	}
@@ -78,7 +78,7 @@ func GetOrphanagesByRegionAndNeeds(w http.ResponseWriter, r *http.Request) {
 		glog.Fatal(err)
 	}
 	if result == nil {
-		needCursor, err = needsColl.Find(context.Background(), bson.M{"categoryofdonate": orphanageFilter.CategoryOfDonate})
+		needCursor, err = needsColl.Find(context.Background(), bson.M{"categoryofdonate": needFilter.CategoryOfDonate})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			glog.Fatal(err)

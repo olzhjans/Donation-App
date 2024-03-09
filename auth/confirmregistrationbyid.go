@@ -12,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
+	"time"
 )
 
 func ConfirmRegistrationById(w http.ResponseWriter, r *http.Request) {
@@ -60,6 +61,7 @@ func ConfirmRegistrationById(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		glog.Fatal(err)
 	}
+	admin.SignupDate = primitive.NewDateTimeFromTime(time.Now().Add(5 * time.Hour))
 	adminColl := client.Database("orphanage").Collection("admins")
 	_, err = adminColl.InsertOne(context.Background(), admin)
 	if err != nil {

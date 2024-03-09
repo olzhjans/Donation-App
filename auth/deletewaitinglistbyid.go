@@ -45,7 +45,7 @@ func DeleteWaitingListById(w http.ResponseWriter, r *http.Request) {
 	coll := client.Database("orphanage").Collection("waitinglist")
 	// Получение ID записи из запроса
 	params := r.URL.Query()
-	id := params.Get("id")
+	id := params.Get("_id")
 	if id == "" {
 		http.Error(w, "ID parameter is required", http.StatusBadRequest)
 		glog.Fatal("ID parameter is required, http.StatusBadRequest")

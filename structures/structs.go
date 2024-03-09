@@ -11,28 +11,28 @@ type LoginData struct {
 
 type Admins struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Phone       string             `json:"phone"`
 	Password    string             `json:"password"`
-	Email       string             `json:"email"`
-	Region      string             `json:"region"`
 	Firstname   string             `json:"firstname"`
 	Lastname    string             `json:"lastname"`
-	Phone       string             `json:"phone"`
+	Email       string             `json:"email"`
+	Region      string             `json:"region"`
 	Who         string             `json:"who"`
 	Id          string             `json:"id"`
-	SignupDate  string             `json:"signup-date"`
-	OrphanageId string             `json:"orphanage-id"`
+	SignupDate  primitive.DateTime `json:"signup-date"`
+	OrphanageId string             `json:"orphanage-id,omitempty"`
 }
 
 type Users struct {
 	ID         primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Phone      string             `json:"phone"`
 	Password   string             `json:"password"`
-	Email      string             `json:"email"`
-	Region     string             `json:"region"`
 	Firstname  string             `json:"firstname"`
 	Lastname   string             `json:"lastname"`
-	Phone      string             `json:"phone"`
-	Donated    string             `json:"donated"`
-	SignupDate string             `json:"signup-date"`
+	Email      string             `json:"email"`
+	Region     string             `json:"region"`
+	Donated    int64              `json:"donated"`
+	SignupDate primitive.DateTime `json:"signup-date"`
 }
 
 type Orphanage struct {
@@ -41,7 +41,7 @@ type Orphanage struct {
 	Region       string             `bson:"region" json:"region"`
 	Address      string             `bson:"address" json:"address"`
 	Description  string             `bson:"description" json:"description"`
-	ChildsCount  string             `bson:"childscount" json:"childs-count"`
+	ChildsCount  int64              `bson:"childscount" json:"childs-count"`
 	WorkingHours string             `bson:"workinghours" json:"working-hours"`
 	Photos       []string           `bson:"photos" json:"photos"`
 	Bill         int64              `bson:"bill" json:"bill"`
@@ -56,7 +56,7 @@ type WhereSpent struct {
 
 type Need struct {
 	ID               primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	Amount           string             `bson:"amount,omitempty" json:"amount,omitempty"`
+	Amount           int64              `bson:"amount,omitempty" json:"amount,omitempty"`
 	Expiring         primitive.DateTime `bson:"expiring,omitempty" json:"expiring,omitempty"`
 	CategoryOfDonate string             `bson:"categoryofdonate,omitempty" json:"categoryofdonate,omitempty"`
 	SizeOfClothes    string             `bson:"sizeofclothes,omitempty" json:"sizeofclothes,omitempty"`
@@ -75,9 +75,9 @@ type Commentary struct {
 }
 
 type Donate struct {
-	UserId      string   `bson:"user-id" json:"user-id"`
-	OrphanageId []string `bson:"orphanage-id" json:"orphanage-id"`
-	Sum         int      `bson:"sum" json:"sum"`
+	BankDetailsId string   `bson:"bankdetails-id" json:"bankdetails-id"`
+	OrphanageId   []string `bson:"orphanage-id" json:"orphanage-id"`
+	Sum           int      `bson:"sum" json:"sum"`
 }
 
 type DonateSubscribe struct {
@@ -120,7 +120,7 @@ type DonateDeactivation struct {
 	ID primitive.ObjectID `bson:"_id" json:"_id"`
 }
 
-type OrphanageFilter struct {
+type NeedFilter struct {
 	Region           string `json:"region,omitempty"`
 	CategoryOfDonate string `json:"category-of-donate,omitempty"`
 }
@@ -136,6 +136,7 @@ type CommentaryFilter struct {
 	From   primitive.DateTime `json:"from"`
 	To     primitive.DateTime `json:"to"`
 }
+
 type DonationFilter struct {
 	Id   string             `json:"id"`
 	From primitive.DateTime `json:"from"`

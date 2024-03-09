@@ -1,0 +1,13 @@
+Log file created at: 2024/03/09 12:12:42
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0309 12:12:42.729803   11108 addcomment.go:90] ObjectID("65ec0beacab23270d4aae4a2")added successfully
+I0309 12:14:15.371275   11108 deletecomment.go:64] 65ec0beacab23270d4aae4a2deleted successfully
+I0309 12:17:07.846007   11108 donate.go:82] Added successfully
+I0309 12:23:34.068332   11108 gettotaldonatedbyorphanageid.go:63] Success
+I0309 12:25:33.656046   11108 gettotaldonatedbyuserid.go:63] Success
+I0309 12:27:18.087915   11108 subscribetodonation.go:74] ObjectID("65ec0f56cab23270d4aae4a9") added subscribe successfully
+I0309 12:27:31.356346   11108 subscribetodonation.go:74] ObjectID("65ec0f63cab23270d4aae4ab") added subscribe successfully
+I0309 12:31:15.377235   11108 deactivatedonatesubsription.go:50] 65e1717668e3bc279918be6adeactivated successfully

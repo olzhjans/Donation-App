@@ -41,21 +41,68 @@ func EditUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
-
-	coll := client.Database("orphanage").Collection("users")
-
+	updateFields := bson.D{}
+	if userData.Phone != "" {
+		updateFields = append(updateFields, bson.E{Key: "phone", Value: userData.Phone})
+	}
+	if userData.Password != "" {
+		updateFields = append(updateFields, bson.E{Key: "password", Value: userData.Password})
+	}
+	if userData.Firstname != "" {
+		updateFields = append(updateFields, bson.E{Key: "firstname", Value: userData.Firstname})
+	}
+	if userData.Lastname != "" {
+		updateFields = append(updateFields, bson.E{Key: "lastname", Value: userData.Lastname})
+	}
+	if userData.Email != "" {
+		updateFields = append(updateFields, bson.E{Key: "email", Value: userData.Email})
+	}
+	if userData.Region != "" {
+		updateFields = append(updateFields, bson.E{Key: "region", Value: userData.Region})
+	}
+	if userData.Donated != 0 {
+		updateFields = append(updateFields, bson.E{Key: "donated", Value: userData.Donated})
+	}
+	if userData.SignupDate != 0 {
+		updateFields = append(updateFields, bson.E{Key: "signupdate", Value: userData.SignupDate})
+	}
+	var result interface{}
+	var update bson.D
+	if len(updateFields) > 0 {
+		update = bson.D{{"$set", updateFields}}
+	} else {
+		result = "No data typed"
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		err = json.NewEncoder(w).Encode(result)
+		if err != nil {
+			glog.Fatal(err)
+		}
+		glog.Error("No data typed")
+		return
+	}
 	filter := bson.D{{"_id", userData.ID}}
-	update := bson.D{{"$set", userData}}
-
-	_, err = coll.UpdateOne(context.Background(), filter, update)
+	coll := client.Database("orphanage").Collection("users")
+	updated, err := coll.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		glog.Fatal(err)
 	}
+	if updated.MatchedCount == 0 {
+		glog.Info(userData.ID, " not found")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		result = userData.ID.Hex() + " not found"
+		err = json.NewEncoder(w).Encode(result)
+		if err != nil {
+			glog.Fatal(err)
+		}
+		return
+	}
 	glog.Info(userData.ID, " edited successfully")
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode("Successfully edited")
+	result = userData.ID.Hex() + " successfully edited"
+	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		glog.Fatal(err)
 	}

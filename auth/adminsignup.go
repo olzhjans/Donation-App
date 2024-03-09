@@ -2,13 +2,16 @@ package auth
 
 import (
 	"awesomeProject1/dbconnect"
+	"awesomeProject1/mail"
 	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
 	"flag"
 	"github.com/golang/glog"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
+	"time"
 )
 
 func AdminSignUp(w http.ResponseWriter, r *http.Request) {
@@ -42,6 +45,7 @@ func AdminSignUp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	admin.SignupDate = primitive.NewDateTimeFromTime(time.Now().Add(5 * time.Hour))
 
 	// Вставка данных в базу данных
 	insertedAdmin, err := coll.InsertOne(context.Background(), admin)
@@ -57,4 +61,6 @@ func AdminSignUp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		glog.Fatal(err)
 	}
+	//SEND MAIL
+	mail.SendMail("olzhjans@gmail.com", "Donation-App", "Your registration request has been sent.")
 }

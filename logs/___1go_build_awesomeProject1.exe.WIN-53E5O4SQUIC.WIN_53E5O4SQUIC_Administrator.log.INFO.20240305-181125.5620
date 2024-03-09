@@ -1,0 +1,6 @@
+Log file created at: 2024/03/05 18:11:25
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0305 18:11:25.531934    5620 usersignup.go:54] ObjectID("65e719fd9c39339929ae5b5d")successfully signed up

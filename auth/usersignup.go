@@ -2,13 +2,16 @@ package auth
 
 import (
 	"awesomeProject1/dbconnect"
+	"awesomeProject1/mail"
 	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
 	"flag"
 	"github.com/golang/glog"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
+	"time"
 )
 
 func UserSignUp(w http.ResponseWriter, r *http.Request) {
@@ -37,10 +40,12 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	coll := client.Database("orphanage").Collection("users")
 	// Парсинг данных из тела запроса
 	var user structures.Users
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+	if err = json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	user.Donated = 0
+	user.SignupDate = primitive.NewDateTimeFromTime(time.Now().Add(5 * time.Hour))
 	// Вставка данных в базу данных
 	insertedUser, err := coll.InsertOne(context.Background(), user)
 	if err != nil {
@@ -56,4 +61,6 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		glog.Fatal(err)
 	}
+	//SEND MAIL
+	mail.SendMail("olzhjans@gmail.com", "Donation-App", "Congratulations! You have registered")
 }

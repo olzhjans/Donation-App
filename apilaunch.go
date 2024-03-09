@@ -27,15 +27,14 @@ func apiLaunch() {
 
 	http.HandleFunc("/addOrphanage", orphanage.AddOrphanage)
 	http.HandleFunc("/editOrphanage", orphanage.EditOrphanage)
-
-	http.HandleFunc("/getOrphanagesByRegionAndNeeds", orphanage.GetOrphanagesByRegionAndNeeds)
 	http.HandleFunc("/getOrphanage", orphanage.GetOrphanageByName) //localhost:8080/getOrphanage?name=ENTER_NAME
 
 	http.HandleFunc("/showWhereSpent", wherespent.ShowWhereSpent)
-	http.HandleFunc("/showNeeds", needs.ShowNeeds)                   //localhost:8080/showNeeds?orphanageid=ENTER_ID
-	http.HandleFunc("/addNeeds", needs.AddNeeds)                     //localhost:8080/showNeeds?orphanageid=ENTER_ID
+	http.HandleFunc("/showNeeds", needs.ShowNeeds) //localhost:8080/showNeeds?orphanageid=ENTER_ID
+	http.HandleFunc("/getNeedsByRegionAndType", needs.GetNeedsByRegionAndType)
+	http.HandleFunc("/addNeed", needs.AddNeeds)
 	http.HandleFunc("/activateNeed", needs.ActivateNeedByNeedId)     //localhost:8080/activateNeed?needid=ENTER_ID
-	http.HandleFunc("/deactivateNeed", needs.DeactivateNeedByNeedId) //localhost:8080/activateNeed?needid=ENTER_ID
+	http.HandleFunc("/deactivateNeed", needs.DeactivateNeedByNeedId) //localhost:8080/deactivateNeed?needid=ENTER_ID
 
 	http.HandleFunc("/getComments", comments.GetComments)
 	http.HandleFunc("/addComment", comments.AddComment)

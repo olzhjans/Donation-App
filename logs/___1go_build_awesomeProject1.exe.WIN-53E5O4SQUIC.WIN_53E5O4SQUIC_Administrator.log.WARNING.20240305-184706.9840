@@ -1,0 +1,24 @@
+Log file created at: 2024/03/05 18:47:06
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+F0305 18:47:06.182658    9840 deletewaitinglistbyid.go:36] http.StatusMethodNotAllowed
+
+goroutine 34 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/auth.DeleteWaitingListById({0x138c610, 0xc000270b60}, 0xc000244300)
+	C:/golang/auth/deletewaitinglistbyid.go:36 +0x2ad
+net/http.HandlerFunc.ServeHTTP(0xdc4400?, {0x138c610?, 0xc000270b60?}, 0x10aa0ba?)
+	C:/Program Files/Go/src/net/http/server.go:2136 +0x29
+net/http.(*ServeMux).ServeHTTP(0x16abae0?, {0x138c610, 0xc000270b60}, 0xc000244300)
+	C:/Program Files/Go/src/net/http/server.go:2514 +0x142
+net/http.serverHandler.ServeHTTP({0xc00002c060?}, {0x138c610?, 0xc000270b60?}, 0x6?)
+	C:/Program Files/Go/src/net/http/server.go:2938 +0x8e
+net/http.(*conn).serve(0xc000188000, {0x138cf50, 0xc000089380})
+	C:/Program Files/Go/src/net/http/server.go:2009 +0x5f4
+created by net/http.(*Server).Serve in goroutine 1
+	C:/Program Files/Go/src/net/http/server.go:3086 +0x5cb
+
+E0305 18:47:06.188677    9840 glog.go:650] abortProcess returned unexpectedly: not supported by windows

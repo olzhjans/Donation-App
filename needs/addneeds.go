@@ -44,7 +44,7 @@ func AddNeeds(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
-	need.Expiring = primitive.NewDateTimeFromTime(time.Now().UTC().AddDate(0, 1, 0))
+	need.Expiring = primitive.NewDateTimeFromTime(time.Now().UTC().Add(5*time.Hour).AddDate(0, 1, 0))
 	// Вставка данных в базу данных
 	insertedNeed, err := coll.InsertOne(context.Background(), need)
 	if err != nil {

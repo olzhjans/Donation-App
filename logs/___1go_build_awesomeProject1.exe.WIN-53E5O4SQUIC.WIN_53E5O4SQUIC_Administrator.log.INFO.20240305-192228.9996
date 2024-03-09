@@ -1,0 +1,9 @@
+Log file created at: 2024/03/05 19:22:28
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0305 19:22:28.249238    9996 editadmin.go:71] ObjectID("000000000000000000000000") not found
+I0305 19:23:13.465636    9996 editadmin.go:71] ObjectID("000000000000000000000000") not found
+I0305 19:23:46.150258    9996 editadmin.go:71] ObjectID("000000000000000000000000") not found
+I0305 19:24:17.161548    9996 editadmin.go:71] ObjectID("000000000000000000000000") not found

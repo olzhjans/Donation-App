@@ -1,0 +1,6 @@
+Log file created at: 2024/03/09 13:03:04
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0309 13:03:04.864555    6592 donate.go:89] Added successfully

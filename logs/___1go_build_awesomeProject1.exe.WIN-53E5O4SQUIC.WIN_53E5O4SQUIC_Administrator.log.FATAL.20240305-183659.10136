@@ -1,0 +1,23 @@
+Log file created at: 2024/03/05 18:36:59
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+F0305 18:36:59.861330   10136 showwaitinglist.go:55] error decoding key signupdate: cannot decode UTC datetime into a string type
+
+goroutine 18 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/auth.ShowWaitingList({0xdfc630, 0xc0001a6000}, 0xc000188000)
+	C:/golang/auth/showwaitinglist.go:55 +0x509
+net/http.HandlerFunc.ServeHTTP(0x834400?, {0xdfc630?, 0xc0001a6000?}, 0xb1a0ba?)
+	C:/Program Files/Go/src/net/http/server.go:2136 +0x29
+net/http.(*ServeMux).ServeHTTP(0x111bae0?, {0xdfc630, 0xc0001a6000}, 0xc000188000)
+	C:/Program Files/Go/src/net/http/server.go:2514 +0x142
+net/http.serverHandler.ServeHTTP({0xc000182030?}, {0xdfc630?, 0xc0001a6000?}, 0x6?)
+	C:/Program Files/Go/src/net/http/server.go:2938 +0x8e
+net/http.(*conn).serve(0xc0000aa000, {0xdfcf70, 0xc00002d3b0})
+	C:/Program Files/Go/src/net/http/server.go:2009 +0x5f4
+created by net/http.(*Server).Serve in goroutine 1
+	C:/Program Files/Go/src/net/http/server.go:3086 +0x5cb
+

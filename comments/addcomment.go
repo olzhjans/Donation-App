@@ -45,7 +45,7 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
-	commentary.Date = primitive.NewDateTimeFromTime(time.Now().UTC())
+	commentary.Date = primitive.NewDateTimeFromTime(time.Now().Add(5 * time.Hour))
 	insertedComment, err := commentaryColl.InsertOne(context.Background(), commentary)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

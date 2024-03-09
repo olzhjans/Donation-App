@@ -1,0 +1,7 @@
+Log file created at: 2024/03/09 12:07:52
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0309 12:07:52.898978    5152 deactivateneed.go:56] ObjectID("65ba75f0ab0265f4fa9d4b5f") deactivated successfully
+I0309 12:09:23.786030    5152 getcomments.go:63] Success

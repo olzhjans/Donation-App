@@ -58,7 +58,7 @@ func DeactivateNeedByNeedId(w http.ResponseWriter, r *http.Request) {
 	// Отправка данных в формате JSON
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode("Successfully deactivated!")
+	err = json.NewEncoder(w).Encode("Successfully deactivated")
 	if err != nil {
 		glog.Fatal(err)
 	}
