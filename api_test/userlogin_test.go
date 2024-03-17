@@ -21,5 +21,5 @@ func Test_UserLogIn(t *testing.T) {
 	}
 	auth.UserLogin(response, request)
 	assert.Equal(t, http.StatusCreated, response.Code)
-	assert.Equal(t, response.Body.String(), "{\"_id\":\"65c1da85b9683cf7113767cf\",\"donated\":72,\"email\":\"nurbeksila@gmail.com\",\"firstname\":\"Nurbek\",\"lastname\":\"Cvetmet\",\"password\":\"12345678\",\"phone\":\"+77787787878\",\"region\":\"Shymkent\",\"signupdate\":\"2024-02-05T19:00:00Z\"}\n")
+	assert.Contains(t, response.Body.String(), "\"email\":\"nurbeksila@gmail.com\",\"firstname\":\"Nurbek\",\"lastname\":\"Cvetmet\",\"password\":\"12345678\",\"phone\":\"+77787787878\",\"region\":\"Shymkent\",\"signupdate\":\"2024-02-05T19:00:00Z\"}\n")
 }

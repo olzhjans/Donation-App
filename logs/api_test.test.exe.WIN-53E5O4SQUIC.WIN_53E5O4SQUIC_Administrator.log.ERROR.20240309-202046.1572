@@ -1,0 +1,23 @@
+Log file created at: 2024/03/09 20:20:46
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+F0309 20:20:46.233181    1572 connecttodb.go:36] You must set your 'MONGODB_URI' environment variable. See
+	 https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable
+
+goroutine 7 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/dbconnect.ConnectToDB()
+	C:/golang/dbconnect/connecttodb.go:36 +0x2bc
+awesomeProject1/auth.AdminSignUp({0xdf1f60, 0xc00006d340}, 0xc00018a000)
+	C:/golang/auth/adminsignup.go:34 +0x1c5
+awesomeProject1/api_test_test.Test_AdminSignUp(0xc00016d520)
+	C:/golang/api_test/adminsignup_test.go:32 +0x1ae
+testing.tRunner(0xc00016d520, 0xd25598)
+	C:/Program Files/Go/src/testing/testing.go:1595 +0xff
+created by testing.(*T).Run in goroutine 1
+	C:/Program Files/Go/src/testing/testing.go:1648 +0x3ad
+
+E0309 20:20:46.238899    1572 glog.go:650] abortProcess returned unexpectedly: not supported by windows

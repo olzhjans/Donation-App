@@ -27,10 +27,10 @@ func ConnectToDB() *mongo.Client {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
+	//
 	if err := godotenv.Load("mongodb.env"); err != nil {
 		log.Println("No .env file found")
-	}
+	} //ENV
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
 		glog.Fatal("You must set your 'MONGODB_URI' environment variable. See\n\t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable")

@@ -1,0 +1,6 @@
+Log file created at: 2024/03/10 14:50:49
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0310 14:50:49.418882    7784 deactivatedonatesubsription.go:50] 65e1717668e3bc279918be6adeactivated successfully

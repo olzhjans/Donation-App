@@ -1,0 +1,19 @@
+Log file created at: 2024/03/09 21:42:04
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+F0309 21:42:04.602755    9384 confirmregistrationbyid.go:62] mongo: no documents in result
+
+goroutine 7 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/auth.ConfirmRegistrationById({0x128eee0, 0xc00006d340}, 0xc00018a000)
+	C:/golang/auth/confirmregistrationbyid.go:62 +0x595
+command-line-arguments.Test_ConfirmRegistrationById(0xc00016d380)
+	C:/golang/api_test/confirmregistration_test.go:17 +0x115
+testing.tRunner(0xc00016d380, 0x11c1188)
+	C:/Program Files/Go/src/testing/testing.go:1595 +0xff
+created by testing.(*T).Run in goroutine 1
+	C:/Program Files/Go/src/testing/testing.go:1648 +0x3ad
+

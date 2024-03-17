@@ -28,7 +28,6 @@ func DeleteComment(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
 	// Проверка метода запроса
 	if r.Method != http.MethodDelete {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -41,21 +40,25 @@ func DeleteComment(w http.ResponseWriter, r *http.Request) {
 			glog.Fatal(err)
 		}
 	}()
+	// Collection connect
 	commentsColl := client.Database("orphanage").Collection("comments")
 	// Получение ID записи из запроса
 	params := r.URL.Query()
 	id := params.Get("_id")
+	// Check if "_id" is not typed
 	if id == "" {
 		http.Error(w, "ID parameter is required", http.StatusBadRequest)
 		glog.Fatal("http.StatusBadRequest")
 	}
-	// Преобразование ID в формат BSON
+	// Преобразование ID в тип ObjectID
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		glog.Fatal(err)
 	}
+	// Преобразование в bson
 	filter := bson.M{"_id": objID}
+	// Delete data
 	_, err = commentsColl.DeleteOne(context.Background(), filter)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

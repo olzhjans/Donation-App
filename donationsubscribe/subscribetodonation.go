@@ -32,25 +32,29 @@ func SubscribeToDonation(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
+	// DB CONNECT
 	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			panic(err)
 		}
 	}()
+	// Collection connect
 	bankDetailsColl := client.Database("orphanage").Collection("bankdetails")
 	donateSubscribeColl := client.Database("orphanage").Collection("donatesubscribe")
+	// Get data from request
 	var subscribe structures.DonationSubscribe
 	if err = json.NewDecoder(r.Body).Decode(&subscribe); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	// CHECK IF BANK CARD IS EXIST
 	var bankDetails map[string]interface{}
 	err = bankDetailsColl.FindOne(context.Background(), bson.D{{"cardnumber", subscribe.BankDetails.CardNumber}}).Decode(&bankDetails)
 	var bankCardId interface{}
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
+			// IF CARD NOT FOUND THEN ADD
 			result, err := bankDetailsColl.InsertOne(context.Background(), subscribe.BankDetails)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -63,16 +67,17 @@ func SubscribeToDonation(w http.ResponseWriter, r *http.Request) {
 			glog.Fatal(err)
 		}
 	} else {
+		// IF BANK CARD IS EXIST
 		bankCardId = bankDetails["_id"]
 		fmt.Println("Bank card exist.")
 	}
+	// ADD SUBSCRIPTION TO COLLECTION
 	inserted, err := donateSubscribeColl.InsertOne(context.Background(), bson.D{{"orphanageid", subscribe.OrphanageId}, {"bankdetailsid", bankCardId.(primitive.ObjectID).Hex()}, {"amount", subscribe.Amount}, {"whichday", subscribe.WhichDay}, {"isactive", subscribe.IsActive}})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		glog.Fatal(err)
 	}
 	glog.Info(inserted.InsertedID, " added subscribe successfully")
-
 	// Возвращаем успешный статус
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

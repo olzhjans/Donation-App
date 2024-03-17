@@ -1,7 +1,7 @@
 package api
 
 import (
-	"awesomeProject1/edituser"
+	"awesomeProject1/adminrights/editadmin"
 	"bytes"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -19,7 +19,7 @@ func Test_EditAdmin(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	edituser.EditAdmin(response, request)
+	editadmin.EditAdmin(response, request)
 	assert.Equal(t, http.StatusCreated, response.Code)
 	expectedBody := "\"65e71c90cbb401656adb55a6 successfully edited\"\n"
 	assert.Equal(t, expectedBody, response.Body.String())

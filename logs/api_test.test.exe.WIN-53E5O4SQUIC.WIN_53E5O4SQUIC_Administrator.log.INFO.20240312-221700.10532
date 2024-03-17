@@ -1,0 +1,29 @@
+Log file created at: 2024/03/12 22:17:00
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0312 22:17:00.246981   10532 activateneed.go:58] 65ba75f0ab0265f4fa9d4b5fsuccessfully activated
+I0312 22:17:00.251952   10532 addcomment.go:90] ObjectID("65f08e0cefd4621a2b01fd08")added successfully
+I0312 22:17:00.256201   10532 donate.go:97] Added successfully
+I0312 22:17:00.259284   10532 addneeds.go:54] ObjectID("65f08e0cefd4621a2b01fd0c") added successfully
+I0312 22:17:00.261405   10532 addorphanage.go:51] ObjectID("65f08e0cefd4621a2b01fd0e") added successfully
+I0312 22:17:00.264145   10532 deactivatedonatesubsription.go:50] 65e1717668e3bc279918be6adeactivated successfully
+I0312 22:17:00.266839   10532 deactivateneed.go:56] ObjectID("65ba75f0ab0265f4fa9d4b5f") deactivated successfully
+I0312 22:17:00.269020   10532 editadmin.go:107] ObjectID("65e71c90cbb401656adb55a6") edited successfully
+I0312 22:17:00.271730   10532 editorphanage.go:99] ObjectID("65ebfa792a10e66ce0a6a8f5") edited successfully
+I0312 22:17:00.351869   10532 edituser.go:101] ObjectID("65e719fd9c39339929ae5b5d") edited successfully
+I0312 22:17:00.354769   10532 getcomments.go:63] Success
+I0312 22:17:00.357876   10532 getdonationhistorybyuserid.go:59] Success
+I0312 22:17:00.361697   10532 getdonationsubscribe.go:71] Success
+I0312 22:17:00.365621   10532 getneedsbyregionandtype.go:99] Success
+I0312 22:17:00.369340   10532 getorphanagebyname.go:81] Success
+I0312 22:17:00.372437   10532 gettotaldonatedbyorphanageid.go:63] Success
+I0312 22:17:00.375023   10532 gettotaldonatedbyuserid.go:63] Success
+I0312 22:17:00.378128   10532 showneeds.go:68] Success
+I0312 22:17:00.380720   10532 showwaitinglist.go:62] Showed successfully
+I0312 22:17:00.383805   10532 showwherespent.go:61] Success
+I0312 22:17:00.387414   10532 subscribetodonation.go:74] ObjectID("65f08e0cefd4621a2b01fd1f") added subscribe successfully
+I0312 22:17:00.390005   10532 userlogin.go:61] Successfully signed in
+I0312 22:17:00.393117   10532 usersignup.go:55] ObjectID("65f08e0cefd4621a2b01fd22")successfully signed up
+I0312 22:17:03.154330   10532 adminsignup.go:56] ObjectID("65f08e0fefd4621a2b01fd24")successfully signed up

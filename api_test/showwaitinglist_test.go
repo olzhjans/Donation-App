@@ -1,7 +1,7 @@
 package api
 
 import (
-	"awesomeProject1/auth"
+	"awesomeProject1/adminrights/adminauth"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -14,7 +14,7 @@ func Test_ShowWaitingList(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	auth.ShowWaitingList(response, request)
+	adminauth.ShowWaitingList(response, request)
 	assert.Equal(t, http.StatusFound, response.Code)
 	assert.Contains(t, response.Body.String(), "_id")
 }

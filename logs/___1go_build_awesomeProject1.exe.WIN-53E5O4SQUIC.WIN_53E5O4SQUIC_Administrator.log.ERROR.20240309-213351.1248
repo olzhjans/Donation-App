@@ -1,0 +1,24 @@
+Log file created at: 2024/03/09 21:33:51
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+F0309 21:33:51.006797    1248 confirmregistrationbyid.go:38] http.StatusMethodNotAllowed
+
+goroutine 18 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/auth.ConfirmRegistrationById({0x94fd50, 0xc0001a2000}, 0xc000178000)
+	C:/golang/auth/confirmregistrationbyid.go:38 +0x2ad
+net/http.HandlerFunc.ServeHTTP(0x384400?, {0x94fd50?, 0xc0001a2000?}, 0x66a17a?)
+	C:/Program Files/Go/src/net/http/server.go:2136 +0x29
+net/http.(*ServeMux).ServeHTTP(0xc6fae0?, {0x94fd50, 0xc0001a2000}, 0xc000178000)
+	C:/Program Files/Go/src/net/http/server.go:2514 +0x142
+net/http.serverHandler.ServeHTTP({0xc00002d4a0?}, {0x94fd50?, 0xc0001a2000?}, 0x6?)
+	C:/Program Files/Go/src/net/http/server.go:2938 +0x8e
+net/http.(*conn).serve(0xc0000aa000, {0x950690, 0xc00002d3b0})
+	C:/Program Files/Go/src/net/http/server.go:2009 +0x5f4
+created by net/http.(*Server).Serve in goroutine 1
+	C:/Program Files/Go/src/net/http/server.go:3086 +0x5cb
+
+E0309 21:33:51.013838    1248 glog.go:650] abortProcess returned unexpectedly: not supported by windows

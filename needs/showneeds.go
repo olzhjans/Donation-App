@@ -27,7 +27,6 @@ func ShowNeeds(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
 	// Проверка метода запроса
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -40,19 +39,23 @@ func ShowNeeds(w http.ResponseWriter, r *http.Request) {
 			glog.Fatal(err)
 		}
 	}()
+	// Collection connect
 	coll := client.Database("orphanage").Collection("need")
 	// Получение ID коллекции из URL
 	orphanageid := r.URL.Query().Get("orphanageid")
+	// Search
 	cursor, err := coll.Find(context.Background(), bson.M{"orphanageid": orphanageid})
 	if err != nil {
 		glog.Fatal(err)
 	}
+	// If there is no id in URL then write all needs
 	if orphanageid == "" {
 		cursor, err = coll.Find(context.Background(), bson.D{})
 		if err != nil {
 			glog.Fatal(err)
 		}
 	}
+	// Decode needs
 	var result []interface{}
 	for cursor.Next(context.Background()) {
 		var cur map[string]interface{}
@@ -66,8 +69,8 @@ func ShowNeeds(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	glog.Info("Success")
-
 	// Отправка данных в формате JSON
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusFound)
 	err = json.NewEncoder(w).Encode(result)
 }

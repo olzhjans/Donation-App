@@ -29,13 +29,14 @@ func GetNeedsByRegionAndType(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
+	// DB CONNECT
 	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			glog.Fatal(err)
 		}
 	}()
+	// Collection connect
 	orphanageColl := client.Database("orphanage").Collection("orphanage")
 	needsColl := client.Database("orphanage").Collection("need")
 	// Парсинг данных из тела запроса
@@ -44,12 +45,14 @@ func GetNeedsByRegionAndType(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	// Search by category
 	needCursor, err := needsColl.Find(context.Background(), bson.M{"categoryofdonate": needFilter.CategoryOfDonate})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		glog.Fatal(err)
 	}
 	var result []interface{}
+	// SEARCH BY ORPHANAGE
 	for needCursor.Next(context.Background()) {
 		var need map[string]interface{}
 		if err = needCursor.Decode(&need); err != nil {
@@ -64,6 +67,7 @@ func GetNeedsByRegionAndType(w http.ResponseWriter, r *http.Request) {
 		}
 		//
 		var orphanage map[string]interface{}
+		// Search by orphanage's id and region
 		err = orphanageColl.FindOne(context.Background(), bson.M{"_id": objId}).Decode(&orphanage)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -78,6 +82,7 @@ func GetNeedsByRegionAndType(w http.ResponseWriter, r *http.Request) {
 		glog.Fatal(err)
 	}
 	if result == nil {
+		// IF DATA BY REGION AND CATEGORY NOT FOUND THEN SEARCH ONLY BY CATEGORY
 		needCursor, err = needsColl.Find(context.Background(), bson.M{"categoryofdonate": needFilter.CategoryOfDonate})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -97,7 +102,6 @@ func GetNeedsByRegionAndType(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	glog.Info("Success")
-
 	// Возвращаем успешный статус
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

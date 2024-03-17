@@ -285,6 +285,9 @@ Example request body:
 ### Deactivating donate subscription
 `GET /deactivateDonateSubscription?_id=ENTER_ID`
 
+### Activating donate subscription
+`GET /activateDonateSubscription?_id=ENTER_ID`
+
 ### Show donation subscribes by user
 `GET /getDonationSubscribeByUserId?userid=ENTER_ID`
 

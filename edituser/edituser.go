@@ -28,19 +28,20 @@ func EditUser(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
+	// DB CONNECT
 	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			glog.Fatal(err)
 		}
 	}()
-
+	// GET DATA FROM REQUEST
 	var userData structures.Users
 	if err = json.NewDecoder(r.Body).Decode(&userData); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	// IF DATA IS TYPED THEN ADD TO "updateFields"
 	updateFields := bson.D{}
 	if userData.Phone != "" {
 		updateFields = append(updateFields, bson.E{Key: "phone", Value: userData.Phone})
@@ -68,9 +69,11 @@ func EditUser(w http.ResponseWriter, r *http.Request) {
 	}
 	var result interface{}
 	var update bson.D
+	// Check if "updateFields" is not empty
 	if len(updateFields) > 0 {
 		update = bson.D{{"$set", updateFields}}
 	} else {
+		// RESPONSE IF EMPTY
 		result = "No data typed"
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
@@ -81,13 +84,15 @@ func EditUser(w http.ResponseWriter, r *http.Request) {
 		glog.Error("No data typed")
 		return
 	}
-	filter := bson.D{{"_id", userData.ID}}
-	coll := client.Database("orphanage").Collection("users")
+	filter := bson.D{{"_id", userData.ID}}                   // implement filter
+	coll := client.Database("orphanage").Collection("users") // collection connect
+	// Update data
 	updated, err := coll.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		glog.Fatal(err)
 	}
 	if updated.MatchedCount == 0 {
+		// Response if user not found
 		glog.Info(userData.ID, " not found")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
@@ -98,6 +103,7 @@ func EditUser(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+	// RESPONSE IF USER FOUND
 	glog.Info(userData.ID, " edited successfully")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

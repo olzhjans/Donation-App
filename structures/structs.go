@@ -74,6 +74,14 @@ type Commentary struct {
 	Date   primitive.DateTime `bson:"date,omitempty" json:"date,omitempty"`
 }
 
+type Chat struct {
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Sender    string             `bson:"sender" json:"sender"`
+	Recipient string             `bson:"recipient" json:"recipient"`
+	Content   string             `bson:"content" json:"content"`
+	Date      primitive.DateTime `bson:"date" json:"date"`
+}
+
 type Donate struct {
 	BankDetailsId string   `bson:"bankdetails-id" json:"bankdetails-id"`
 	OrphanageId   []string `bson:"orphanage-id" json:"orphanage-id"`

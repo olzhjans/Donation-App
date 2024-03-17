@@ -1,0 +1,29 @@
+Log file created at: 2024/03/13 09:36:25
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0313 09:36:25.730316    7104 activateneed.go:58] 65ba75f0ab0265f4fa9d4b5fsuccessfully activated
+I0313 09:36:25.736994    7104 addcomment.go:90] ObjectID("65f12d49f5462cddec7d6f94")added successfully
+I0313 09:36:25.740643    7104 donate.go:97] Added successfully
+I0313 09:36:25.743910    7104 addneeds.go:54] ObjectID("65f12d49f5462cddec7d6f98") added successfully
+I0313 09:36:25.746641    7104 addorphanage.go:51] ObjectID("65f12d49f5462cddec7d6f9a") added successfully
+I0313 09:36:25.749282    7104 deactivatedonatesubsription.go:50] 65e1717668e3bc279918be6adeactivated successfully
+I0313 09:36:25.751829    7104 deactivateneed.go:56] ObjectID("65ba75f0ab0265f4fa9d4b5f") deactivated successfully
+I0313 09:36:25.754101    7104 editadmin.go:107] ObjectID("65e71c90cbb401656adb55a6") edited successfully
+I0313 09:36:25.756767    7104 editorphanage.go:99] ObjectID("65ebfa792a10e66ce0a6a8f5") edited successfully
+I0313 09:36:25.759414    7104 edituser.go:101] ObjectID("65e719fd9c39339929ae5b5d") edited successfully
+I0313 09:36:25.762069    7104 getcomments.go:63] Success
+I0313 09:36:25.764677    7104 getdonationhistorybyuserid.go:59] Success
+I0313 09:36:25.768163    7104 getdonationsubscribe.go:71] Success
+I0313 09:36:25.771510    7104 getneedsbyregionandtype.go:99] Success
+I0313 09:36:25.773665    7104 getorphanagebyname.go:81] Success
+I0313 09:36:25.776387    7104 gettotaldonatedbyorphanageid.go:63] Success
+I0313 09:36:25.778468    7104 gettotaldonatedbyuserid.go:63] Success
+I0313 09:36:25.781245    7104 showneeds.go:68] Success
+I0313 09:36:25.783315    7104 showwaitinglist.go:62] Showed successfully
+I0313 09:36:25.786022    7104 showwherespent.go:61] Success
+I0313 09:36:25.788596    7104 subscribetodonation.go:74] ObjectID("65f12d49f5462cddec7d6fab") added subscribe successfully
+I0313 09:36:25.790732    7104 userlogin.go:61] Successfully signed in
+I0313 09:36:25.793076    7104 usersignup.go:55] ObjectID("65f12d49f5462cddec7d6fae")successfully signed up
+I0313 09:36:27.190893    7104 adminsignup.go:56] ObjectID("65f12d4bf5462cddec7d6fb0")successfully signed up

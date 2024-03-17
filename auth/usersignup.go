@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"awesomeProject1/adminrights/mail"
 	"awesomeProject1/dbconnect"
-	"awesomeProject1/mail"
 	"awesomeProject1/structures"
 	"context"
 	"encoding/json"
@@ -30,13 +30,14 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
+	// DB CONNECT
 	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			glog.Fatal(err)
 		}
 	}()
+	// Collection connect
 	coll := client.Database("orphanage").Collection("users")
 	// Парсинг данных из тела запроса
 	var user structures.Users
@@ -44,7 +45,9 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	// Add donated int
 	user.Donated = 0
+	// Actual datetime
 	user.SignupDate = primitive.NewDateTimeFromTime(time.Now().Add(5 * time.Hour))
 	// Вставка данных в базу данных
 	insertedUser, err := coll.InsertOne(context.Background(), user)
@@ -53,7 +56,7 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 		glog.Fatal(err)
 	}
 	glog.Info(insertedUser.InsertedID, "successfully signed up")
-
+	// RESPONSE
 	w.Header().Set("Content-Type", "application/json")
 	// Возвращаем успешный статус
 	w.WriteHeader(http.StatusCreated)

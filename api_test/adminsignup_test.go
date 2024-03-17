@@ -1,7 +1,7 @@
 package api_test
 
 import (
-	"awesomeProject1/auth"
+	"awesomeProject1/adminrights/adminauth"
 	"bytes"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -26,7 +26,7 @@ func Test_AdminSignUp(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	auth.AdminSignUp(response, request)
+	adminauth.AdminSignUp(response, request)
 	assert.Equal(t, http.StatusCreated, response.Code)
 	expectedBody := "\"Added successfully\"\n"
 	assert.Equal(t, expectedBody, response.Body.String())

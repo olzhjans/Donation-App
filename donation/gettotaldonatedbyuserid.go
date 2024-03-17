@@ -28,24 +28,28 @@ func GetTotalDonatedByUserIdAndPeriod(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
+	// DB CONNECT
 	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			glog.Fatal(err)
 		}
 	}()
+	// Collection connect
 	donationHistoryColl := client.Database("orphanage").Collection("donationhistory")
+	// GET DATA FROM REQUEST
 	var donation structures.DonationFilter
-	if err := json.NewDecoder(r.Body).Decode(&donation); err != nil {
+	if err = json.NewDecoder(r.Body).Decode(&donation); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	// SEARCH DATA
 	donationCursor, err := donationHistoryColl.Find(context.Background(), bson.M{"user-id": donation.Id, "date": bson.M{"$gte": donation.From, "$lte": donation.To}})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		glog.Fatal(err)
 	}
+	// SUM DONATES
 	sum := 0
 	for donationCursor.Next(context.Background()) {
 		var donate structures.DonationHistory
@@ -56,6 +60,7 @@ func GetTotalDonatedByUserIdAndPeriod(w http.ResponseWriter, r *http.Request) {
 		}
 		sum += donate.Sum
 	}
+	// cursor close
 	err = donationCursor.Close(context.Background())
 	if err != nil {
 		glog.Fatal(err)

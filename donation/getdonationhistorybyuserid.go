@@ -28,20 +28,24 @@ func GetDonationHistoryByUserId(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
+	// DB CONNECT
 	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			glog.Fatal(err)
 		}
 	}()
+	// Collection connect
 	donationHistoryColl := client.Database("orphanage").Collection("donationhistory")
+	// Get userid from URL
 	userid := r.URL.Query().Get("userid")
+	// Search user's donation history
 	donationCursor, err := donationHistoryColl.Find(context.Background(), bson.M{"user-id": userid})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	// RETURN HISTORY
 	var result []interface{}
 	for donationCursor.Next(context.Background()) {
 		var donate structures.DonationHistory
@@ -52,15 +56,15 @@ func GetDonationHistoryByUserId(w http.ResponseWriter, r *http.Request) {
 		}
 		result = append(result, donate)
 	}
+	// Close cursor
 	err = donationCursor.Close(context.Background())
 	if err != nil {
 		glog.Error(err)
 	}
 	glog.Info("Success")
-
 	// Возвращаем успешный статус
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		glog.Error(err)

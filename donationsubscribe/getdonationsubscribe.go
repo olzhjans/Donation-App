@@ -28,21 +28,24 @@ func GetDonationSubscribeByUserId(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
+	// DB CONNECT
 	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
 			glog.Fatal(err)
 		}
 	}()
+	// Collection connect
 	bankDetailsColl := client.Database("orphanage").Collection("bankdetails")
 	donateSubscribeColl := client.Database("orphanage").Collection("donatesubscribe")
 	userid := r.URL.Query().Get("userid")
+	// Search data
 	bankDetailsCursor, err := bankDetailsColl.Find(context.Background(), bson.D{{"userid", userid}})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	// SEARCH SUBSCRIBES
 	var result []interface{}
 	for bankDetailsCursor.Next(context.Background()) {
 		var detail structures.BankDetails
@@ -71,7 +74,7 @@ func GetDonationSubscribeByUserId(w http.ResponseWriter, r *http.Request) {
 	glog.Info("Success")
 	// Возвращаем успешный статус
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		glog.Fatal(err)

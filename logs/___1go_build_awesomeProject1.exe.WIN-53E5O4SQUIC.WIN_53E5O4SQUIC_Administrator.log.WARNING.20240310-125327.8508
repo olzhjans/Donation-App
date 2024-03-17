@@ -1,0 +1,24 @@
+Log file created at: 2024/03/10 12:53:27
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+F0310 12:53:27.769155    8508 addorphanage.go:43] json: cannot unmarshal string into Go struct field Orphanage.childs-count of type int64
+
+goroutine 8 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/orphanage.AddOrphanage({0x9bfd50, 0xc000132000}, 0xc000118000)
+	C:/golang/orphanage/addorphanage.go:43 +0x3d5
+net/http.HandlerFunc.ServeHTTP(0x10?, {0x9bfd50?, 0xc000132000?}, 0xc0001160ac?)
+	C:/Program Files/Go/src/net/http/server.go:2136 +0x29
+net/http.(*ServeMux).ServeHTTP(0x3bd925?, {0x9bfd50, 0xc000132000}, 0xc000118000)
+	C:/Program Files/Go/src/net/http/server.go:2514 +0x142
+net/http.serverHandler.ServeHTTP({0x9be598?}, {0x9bfd50?, 0xc000132000?}, 0x6?)
+	C:/Program Files/Go/src/net/http/server.go:2938 +0x8e
+net/http.(*conn).serve(0xc0000dc240, {0x9c0690, 0xc00002d3b0})
+	C:/Program Files/Go/src/net/http/server.go:2009 +0x5f4
+created by net/http.(*Server).Serve in goroutine 1
+	C:/Program Files/Go/src/net/http/server.go:3086 +0x5cb
+
+E0310 12:53:27.775671    8508 glog.go:650] abortProcess returned unexpectedly: not supported by windows

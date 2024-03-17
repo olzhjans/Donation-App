@@ -1,7 +1,7 @@
 package api
 
 import (
-	"awesomeProject1/needs"
+	"awesomeProject1/adminrights/needs"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"

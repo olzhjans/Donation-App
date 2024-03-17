@@ -1,0 +1,53 @@
+Log file created at: 2024/03/17 11:09:37
+Running on machine: WIN-53E5O4SQUIC
+Binary: Built with gc go1.21.6 for windows/amd64
+Previous log: <none>
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+F0317 11:09:37.330455    8992 chat_server.go:130] close tcp [::1]:12345->[::1]:49907: use of closed network connection
+
+goroutine 13 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/chat.(*Client).read.func1()
+	C:/golang/chat/chat_server.go:130 +0xc6
+awesomeProject1/chat.(*Client).read(0xc000060c60)
+	C:/golang/chat/chat_server.go:152 +0x358
+created by awesomeProject1/chat.wsPage in goroutine 12
+	C:/golang/chat/chat_server.go:184 +0x20e
+
+F0317 11:09:37.330455    8992 chat_server.go:159] close tcp [::1]:12345->[::1]:49907: use of closed network connection
+
+goroutine 14 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/chat.(*Client).write.func1()
+	C:/golang/chat/chat_server.go:159 +0xa8
+awesomeProject1/chat.(*Client).write(0xc000060c60)
+	C:/golang/chat/chat_server.go:168 +0xea
+created by awesomeProject1/chat.wsPage in goroutine 12
+	C:/golang/chat/chat_server.go:185 +0x256
+
+F0317 11:09:37.330977    8992 chat_server.go:159] close tcp [::1]:12345->[::1]:49901: use of closed network connection
+
+goroutine 11 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/chat.(*Client).write.func1()
+	C:/golang/chat/chat_server.go:159 +0xa8
+awesomeProject1/chat.(*Client).write(0xc000060c00)
+	C:/golang/chat/chat_server.go:168 +0xea
+created by awesomeProject1/chat.wsPage in goroutine 8
+	C:/golang/chat/chat_server.go:185 +0x256
+
+F0317 11:09:37.330977    8992 chat_server.go:130] close tcp [::1]:12345->[::1]:49901: use of closed network connection
+
+goroutine 10 [running]:
+github.com/golang/glog.Fatal(...)
+	C:/Users/Administrator/go/pkg/mod/github.com/golang/glog@v1.2.0/glog.go:664
+awesomeProject1/chat.(*Client).read.func1()
+	C:/golang/chat/chat_server.go:130 +0xc6
+awesomeProject1/chat.(*Client).read(0xc000060c00)
+	C:/golang/chat/chat_server.go:152 +0x358
+created by awesomeProject1/chat.wsPage in goroutine 8
+	C:/golang/chat/chat_server.go:184 +0x20e
+

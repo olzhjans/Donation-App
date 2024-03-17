@@ -29,7 +29,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	flag.Parse()
 	defer glog.Flush()
-
+	// DB CONNECT
 	client := dbconnect.ConnectToDB()
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
@@ -38,12 +38,14 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	}()
 	// Парсинг данных из тела запроса
 	var loginData structures.LoginData
-	if err := json.NewDecoder(r.Body).Decode(&loginData); err != nil {
+	if err = json.NewDecoder(r.Body).Decode(&loginData); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		glog.Fatal(err)
 	}
+	// collection connect
 	userColl := client.Database("orphanage").Collection("users")
 	adminsColl := client.Database("orphanage").Collection("admins")
+	// Search data by phone and password
 	var result bson.M
 	err = userColl.FindOne(context.TODO(), bson.D{{"phone", loginData.Phone}, {"password", loginData.Password}}).Decode(&result)
 	if err != nil {
@@ -59,7 +61,6 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	glog.Info("Successfully signed in")
-
 	// Возвращаем успешный статус
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
