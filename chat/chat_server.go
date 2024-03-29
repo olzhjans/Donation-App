@@ -47,6 +47,7 @@ var manager = ClientManager{
 }
 
 func (manager *ClientManager) start() {
+	fmt.Println(">>start")
 	var err error
 	// DB CONNECT
 	client := dbconnect.ConnectToDB()
@@ -59,11 +60,13 @@ func (manager *ClientManager) start() {
 	for {
 		select {
 		case conn := <-manager.register:
+			fmt.Println(">>>manager.register")
 			fmt.Println("user connected ", conn)
 			manager.clients[conn] = true
 			jsonMessage, _ := json.Marshal(&Message{Content: "/A new socket has connected."})
 			manager.send(jsonMessage, conn)
 		case conn := <-manager.unregister:
+			fmt.Println(">>>manager.unregister")
 			fmt.Println("user disconnected ", conn)
 			if _, ok := manager.clients[conn]; ok {
 				close(conn.send)
@@ -72,7 +75,7 @@ func (manager *ClientManager) start() {
 				manager.send(jsonMessage, conn)
 			}
 		case message := <-manager.broadcast:
-			fmt.Println("broadcast")
+			fmt.Println(">>>manager.broadcast")
 			for conn := range manager.clients {
 				fmt.Println(conn)
 				select {
@@ -83,6 +86,7 @@ func (manager *ClientManager) start() {
 				}
 			}
 		case jsonMessage := <-manager.directMessage:
+			fmt.Println(">>>manager.directMessage")
 			// Получаем JSON-представление сообщения из канала
 			var msg Message
 			if err = json.Unmarshal(jsonMessage, &msg); err != nil {
@@ -114,6 +118,7 @@ func (manager *ClientManager) start() {
 }
 
 func (manager *ClientManager) send(message []byte, ignore *Client) {
+	fmt.Println(">>send")
 	for conn := range manager.clients {
 		if conn != ignore {
 			conn.send <- message
@@ -122,6 +127,7 @@ func (manager *ClientManager) send(message []byte, ignore *Client) {
 }
 
 func (c *Client) read() { // The point of this goroutine is to read the socket data and add it to the manager.broadcast for further orchestration.
+	fmt.Println(">>read")
 	defer func() {
 		manager.unregister <- c
 		c.socket.Close()
@@ -145,10 +151,10 @@ func (c *Client) read() { // The point of this goroutine is to read the socket d
 }
 
 func (c *Client) write() {
+	fmt.Println(">>write")
 	defer func() {
 		c.socket.Close()
 	}()
-
 	for {
 		select {
 		case message, ok := <-c.send:
@@ -162,6 +168,7 @@ func (c *Client) write() {
 }
 
 func wsPage(res http.ResponseWriter, req *http.Request) {
+	fmt.Println(">>wsPage")
 	conn, err := (&websocket.Upgrader{CheckOrigin: func(r *http.Request) bool { return true }}).Upgrade(res, req, nil)
 	if err != nil {
 		http.NotFound(res, req)
@@ -174,6 +181,7 @@ func wsPage(res http.ResponseWriter, req *http.Request) {
 }
 
 func LaunchChatServer() {
+	fmt.Println(">>LaunchChatServer")
 	var err error
 	err = flag.Set("logtostderr", "false") // Логировать в stderr (консоль) (false для записи в файл)
 	if err != nil {

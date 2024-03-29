@@ -150,3 +150,7 @@ type DonationFilter struct {
 	From primitive.DateTime `json:"from"`
 	To   primitive.DateTime `json:"to"`
 }
+
+type SignedInUser struct {
+	Id string
+}

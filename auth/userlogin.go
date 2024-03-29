@@ -60,6 +60,9 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	// Извлечение _id из результата
+	dataInstance := &structures.SignedInUser{Id: result["_id"].(string)}
+	ModifyData(dataInstance)
 	glog.Info("Successfully signed in")
 	// Возвращаем успешный статус
 	w.Header().Set("Content-Type", "application/json")
@@ -68,4 +71,8 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		glog.Fatal(err)
 	}
+}
+
+func ModifyData(d *structures.SignedInUser) {
+	d.Id = "New Name" // Изменение поля структуры через указатель
 }
